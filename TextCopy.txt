@@ -1,5 +1,77 @@
 sqa_7c4f529e4b92d2c15ea5570c564e0499286557c5
 
+DOCKER PROJECT ON STACK
+pipeline {
+ agent {
+ node {
+ label 'docker'
+ }
+ }
+ 
+ stages {
+ stage('Code') {
+ steps {
+ git "https://github.com/devops0014/dockerwebapp.git"
+ }
+ }
+ stage ("CQA") {
+ steps {
+ withSonarQubeEnv("mysonar") {
+ sh "mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -
+Dsonar.projectKey=MyProject"
+ }
+ }
+ }
+ }
+ // add nexus stage here
+ stage ("Image") {
+ steps {
+ sh 'docker build -t dbimage database/'
+ sh 'docker build -t authimage auth/'
+ sh 'docker build -t bookimage book/'
+ sh 'docker build -t borrowimage borrow/'
+ sh 'docker build -t appimage .'
+ }
+ }
+ stage ("ScanImage") {
+ steps {
+ sh 'trivy image dbimage'
+ sh 'trivy image authimage'
+ sh 'trivy image bookimage'
+ sh 'trivy image borrowimage'
+ sh 'trivy image appimage'
+ }
+ }
+ stage ("Tag") {
+ steps {
+ sh 'docker tag appimage sureshtungala/mynewpyapp:dbimage'
+ sh 'docker tag dbimage sureshtungala/mynewpyapp:authimage'
+ sh 'docker tag dbimage sureshtungala/mynewpyapp:bookimage'
+ sh 'docker tag dbimage sureshtungala/mynewpyapp:borrowimage'
+ sh 'docker tag dbimage sureshtungala/mynewpyapp:appimage'
+ }
+ }
+ stage ("Push") {
+ steps {
+ script {
+ withDockerRegistry(credentialsId: 'dockerhub') {
+ sh 'docker push sureshtungala/mynewpyapp:dbimage'
+ sh 'docker push sureshtungala/mynewpyapp:authimage'
+ sh 'docker push sureshtungala/mynewpyapp:bookimage'
+ sh 'docker push sureshtungala/mynewpyapp:borrowimage'
+ sh 'docker push sureshtungala/mynewpyapp:appimage'
+ }
+ }
+ }
+ }
+ stage ("Deploy") {
+ steps {
+ sh 'docker stack deploy flm --compose-file=compose.yml'
+ }
+ }
+ }
+}
+
 
 Todays Commands:
 
