@@ -1,3 +1,83 @@
+Todays commands:
+
+
+1     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+    2  chmod +x kubectl
+
+    3  mv kubectl /usr/local/bin/
+
+    4  curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+
+    5  chmod +x kops
+
+    6  sudo mv kops /usr/local/bin/kops
+
+    7  aws s3 ls
+
+    8  export KOPS_STATE_STORE=s3://mustafa.2026.flm
+
+    9  kops create cluster --name mustafa.k8s.local --zones us-east-2a,us-east-2b --master-size c7i-flex.large --master-volume-size 30 --node-count 2 --node-volume-size 20 --node-size t3.micro --image=ami-0f5fcdfbd140e4ab7
+
+   10   kops update cluster --name mustafa.k8s.local --yes --admin
+
+   11  kubectl get nodes
+
+   12  ll
+
+   13  vim pod.yml
+
+   14  kubectl create -f pod.yml
+
+   15  kubectl get po
+
+   16  vim service.yml
+
+   17  kubectl api-resources
+
+   18  kubectl api-resources | grep -i "services"
+
+   19  vim service.yml
+
+   20  kubectl create -f service.yml
+
+   21  vim service.yml
+
+   22  kubectl create -f service.yml
+
+   23  kubectl get services
+
+   24  kubectl get svc
+
+   25  vim service.yml
+
+   26  kubectl create -f service.yml
+
+   27  kubectl get svc
+
+   28  vim service.yml
+
+   29  kubectl create -f service.yml
+
+   30  kubectl get svc
+
+   31  ll
+
+   32  vim service.yml
+
+   33  kubectl create -f service.yml
+
+   34  kubectl get svc
+
+   35  kubectl get po
+
+   36  kubectl delete pod pod-1
+
+   37  kubectl create -f pod.yml
+
+   38  history
+
+
 sqa_7c4f529e4b92d2c15ea5570c564e0499286557c5
 
 DOCKER PROJECT ON STACK
